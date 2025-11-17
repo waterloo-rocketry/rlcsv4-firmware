@@ -1,0 +1,27 @@
+name: Relay Board C Lint Check
+
+# Runs on pushes to pull request
+on: pull_request
+
+jobs:
+  # Build job
+  clang-tidy-lint-check:
+    name: Relay Board C Lint Check (clang-tidy check)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+      - name: Install clang-tidy 21
+        id: llvm-install
+        shell: bash
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 21
+          sudo apt install clang-tidy-21
+      - name: Run lint check
+        id: run-lint
+        shell: bash
+        run: clang-tidy-21 relay_board/mcp23008.c relay_board/mcp23008.h --warnings-as-errors="*" --checks="clang-*,misc-*" --extra-arg-before="-std=c99" --extra-arg-before="-pedantic" --extra-arg-before="-Ithird_party/canlib" --extra-arg-before="-Ithird_party/rocketlib/include" --extra-arg-before="-DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_RLCS_RELAY" --extra-arg-before="-DBOARD_INST_UNIQUE_ID=BOARD_INST_ID_GROUND"
