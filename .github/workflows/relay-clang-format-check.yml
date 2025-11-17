@@ -1,0 +1,19 @@
+name: Relay Board C Coding Style Check
+
+# Runs on pushes to pull request
+on: pull_request
+
+jobs:
+  clang-format-style-check:
+    name: Relay Board C Coding Style Check (clang-format check)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+      - name: Run formatting check
+        uses: waterloo-rocketry/actions/clang-format-check@main
+        with:
+          clang-format-config-path: 'third_party/rocketlib/.clang-format'
+          c-source-files: 'relay_board/*.c relay_board/*.h'
