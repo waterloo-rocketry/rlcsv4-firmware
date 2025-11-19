@@ -19,14 +19,14 @@
  *
  * This function initializes the MCP23008 with specified I/O directions.
  *
- * Each bit of io_dir determines I/O direction for one pin, with bit number
- * corresponding to pin number. Bit value of 1 means output, 0 means input. Note
- * GP7 must be configured as an output.
+ * Each bit of iodir determines I/O direction for one pin, with bit number
+ * corresponding to pin number. Bit value of 0 means output, 1 means input. Note
+ * GP7 must be configured as an output (0).
  *
- * @param io_dir I/O directions for each pin
+ * @param iodir I/O directions for each pin
  * @return w_status_t Returns status code
  */
-w_status_t mcp23008_init(uint8_t io_dir);
+w_status_t mcp23008_init(uint8_t iodir);
 
 /**
  * @brief Read all GPIO pins of MCP23008.
@@ -43,8 +43,10 @@ w_status_t mcp23008_read_gpio(uint8_t *data);
  * @brief Writes all GPIO pins configured as outputs of MCP23008.
  *
  * This function writes to all GPIO pins which are configured as outputs. The
- * value of pin GPX will be set to the value of bit X of data (if pin GPX was
- * configured as an output).
+ * level of pin GPX will be set to the value of bit X of data (if pin GPX was
+ * configured as an output). If a pin is set to input, attempting to write to
+ * it will still write to Output Latch (OLAT) but actual pin will not be
+ * driven to OLAT level.
  *
  * @param data Binary value representing values to write to pins.
  * @return w_status_t Returns status code
