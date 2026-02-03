@@ -1,7 +1,9 @@
 #include <stdint.h>
 #include <xc.h>
+
 #include "canlib.h"
 #include "timer.h"
+
 #include "mcc_generated_files/system/system.h"
 
 #define LED_OFF 1
