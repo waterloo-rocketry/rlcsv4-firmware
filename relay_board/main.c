@@ -1,9 +1,9 @@
-#include "canlib.h"
-#include "mcc_generated_files/system/system.h"
-#include "timer.h"
+#include <stdint.h>
 #include <xc.h>
+#include "canlib.h"
+#include "timer.h"
+#include "mcc_generated_files/system/system.h"
 
-//
 #define LED_OFF 1
 #define LED_ON 0
 #define LED_R LATA4
@@ -22,7 +22,7 @@ int main(void) {
 
 	LED_init();
 
-	// init our millisecond function
+	// initialize timer for millis function
 	timer0_init();
 	uint32_t last_millis = millis();
 	uint32_t last_message_millis = 0;
@@ -47,18 +47,20 @@ int main(void) {
 	// set up CAN tx buffer
 	txb_init(tx_pool, sizeof(tx_pool), pic18f26k83_can_send, pic18f26k83_can_send_rdy);
 
-	while (1) {
+	for (;;) {
 		if (millis() - last_millis >= STATUS_TIME_DIFF_ms) {
 			// check for general board status
-			uint32_t general_error = 0;
-			uint16_t board_error = 0;
+			uint32_t general_error_status = 0;
+			uint16_t board_error_status = 0;
 
 			can_msg_t status_msg;
-			build_general_board_status_msg(
-				PRIO_MEDIUM, (uint16_t)millis(), general_error, board_error, &status_msg);
+			build_general_board_status_msg(PRIO_MEDIUM,
+										   (uint16_t)millis(),
+										   general_error_status,
+										   board_error_status,
+										   &status_msg);
 			txb_enqueue(&status_msg);
 
-			// White LED flashes during safe state.
 			LED_W = LED_W ^ LED_OFF;
 			last_millis = millis();
 		}
@@ -67,7 +69,7 @@ int main(void) {
 	}
 }
 
-// interrupt handler for millis and timer.h
+// interrupt handler for timer and CAN controller
 static void __interrupt() interrupt_handler() {
 	if (PIR5) {
 		pic18f26k83_can_handle_interrupt();
