@@ -77,22 +77,22 @@ void  INTERRUPT_Initialize (void)
  * @param None.
  * @return None.
  */
-void __interrupt() INTERRUPT_InterruptManager (void)
-{
-    // interrupt handler
-    if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
-    {
-        ADC_ISR();
-    }
-    else if(PIE1bits.ADTIE == 1 && PIR1bits.ADTIF == 1)
-    {
-        ADC_ThresholdISR();
-    }
-    else
-    {
-        //Unhandled Interrupt
-    }
-}
+//void __interrupt() INTERRUPT_InterruptManager (void)
+//{
+//    // interrupt handler
+//    if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
+//    {
+//        ADC_ISR();
+//    }
+//    else if(PIE1bits.ADTIE == 1 && PIR1bits.ADTIF == 1)
+//    {
+//        ADC_ThresholdISR();
+//    }
+//    else
+//    {
+//        //Unhandled Interrupt
+//    }
+//}
 
 void INT0_ISR(void)
 {
